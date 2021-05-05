@@ -7,12 +7,12 @@ import imageio
 import telegram
 import time
 import os
+import connector
+from config import TOKEN
 
-bot = telegram.Bot(token="1749418611:AAGOV2XB5mkMXqX-J_wtNu7KkrkhO_Xylmg")
+bot = telegram.Bot(token=TOKEN)
 
-pool = redis.ConnectionPool(host='127.0.0.1', port=6379, encoding='utf8', decode_responses=True)
-
-r = redis.StrictRedis(connection_pool=pool)
+r = connector.get_connection()
 
 key_list = r.keys()
 group_list = []
