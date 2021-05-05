@@ -1,5 +1,6 @@
 import datetime
 import threading
+import connector
 
 import telegram
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ForceReply
@@ -22,8 +23,22 @@ def start(update, context):
 
 
 def chat_content_exec(update, context):
+    r = connector.get_connection()
+    text = update.message.text
+    chat_type = update.effective_chat.type
+    user_id = update.effective_user.id
     chat_id = update.effective_message.chat_id
-    print(chat_id)
+    print("\n---------------------------")
+    print("内容: " + text)
+    if "/" in text:
+        print("这是一条指令信息")
+    print("群组类型: " + str(chat_type))
+    print("用户ID: " + str(user_id))
+    print("chat_id: " + str(chat_id))
+    r.append("{}_chat_content".format(chat_id), text)
+    r.incrby("{}_user_message_amount", user_id)
+    print("---------------------------")
+
 
 
 start_handler = CommandHandler('start', start)
