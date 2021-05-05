@@ -1,8 +1,7 @@
 import time
-
 import connector
 import telegram
-from telegram.ext import CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
+from telegram.ext import CommandHandler, MessageHandler, Filters
 from config import TOKEN
 import schedule
 
@@ -10,10 +9,17 @@ bot = telegram.Bot(token=TOKEN)
 
 
 def start(update, context):
-    print('进入start函数')
-    update.message.reply_text(
-        '您好！',
-    )
+    try:
+        connector.get_connection()
+        print('进入start函数')
+        update.message.reply_text(
+            '在呢！系统运行正常~',
+        )
+    except Exception as e:
+        print(e)
+        print('进入start函数')
+        update.message.reply_text("系统故障，Redis连接失败，请检查！")
+        update.message.reply_text("错误信息：" + str(e))
 
 
 def chat_content_exec(update, context):
