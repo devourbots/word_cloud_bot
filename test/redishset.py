@@ -8,3 +8,5 @@ r = redis.StrictRedis(connection_pool=pool)
 # r.hincrby('user', "b")
 print(r.hget("user", "a"))
 print(r.hget("user", "b"))
+r.delete()
+
