@@ -86,3 +86,10 @@ docker run -d --net=host world_cloud_bot:latest
         return
 ```
 
+### 信息推送密度
+
+![xW3jh.png](https://s3.jpg.cm/2021/05/05/xW3jh.png)
+
+默认分别会在当地时间 11:00、18:00、23:30 推送三次数据统计报告，并会在 23:59 清空当日统计数据，
+如需更密集的数据推送，可以编辑 /root/word_cloud_bot/main.py ，按照示例格式自行增加，相关的 docker 技术操作不再赘述
+
