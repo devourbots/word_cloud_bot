@@ -5,7 +5,7 @@ import schedule
 from task import do_task
 import threading
 
-schedule.every().day.at('16:20').do(do_task).tag('task')
+schedule.every().day.at('23:30').do(do_task).tag('task')
 # schedule.every(1).minutes.do(do_task).tag('task')
 
 threading.Thread(target=check_schedule).start()
