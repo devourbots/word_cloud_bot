@@ -1,16 +1,7 @@
-import datetime
-import threading
 import connector
-
 import telegram
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ForceReply
 from telegram.ext import CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from config import TOKEN
-import sqlite3
-import time
-import os
-import importlib
-import requests
 
 bot = telegram.Bot(token=TOKEN)
 
@@ -28,6 +19,10 @@ def chat_content_exec(update, context):
     chat_type = update.effective_chat.type
     user_id = update.effective_user.id
     chat_id = update.effective_message.chat_id
+    try:
+        username = update.effective_user.username
+    except Exception as e:
+        username = update.effective_user.id
     print("\n---------------------------")
     print("内容: " + text)
     print("群组类型: " + str(chat_type))
@@ -41,7 +36,7 @@ def chat_content_exec(update, context):
         else:
             r.append("{}_chat_content".format(chat_id), text)
         r.incrby("{}_total_message_amount".format(chat_id))
-        r.hincrby("{}_user_message_amount".format(chat_id), user_id)
+        r.hincrby("{}_user_message_amount".format(chat_id), username)
     print("---------------------------")
 
 

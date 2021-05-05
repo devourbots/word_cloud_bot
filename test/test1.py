@@ -9,7 +9,6 @@ word_amount['y2222'] = 2
 word_amount['y3333'] = 4
 word_amount['y4444'] = 3
 
-
 print(word_amount.get("123"))
 print(word_amount.get("y4444"))
 
@@ -28,3 +27,7 @@ rst = re.match(r"^\s+?$", str)
 
 print(rst)
 
+import time
+
+print(time.strftime("%Y年%m月%d日", time.localtime()))
+print(time.strftime("%H:%M", time.localtime()))

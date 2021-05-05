@@ -1,7 +1,5 @@
 from telegram.ext import Updater
 from config import TOKEN
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ForceReply
-from telegram.ext import CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from func import start_handler, chat_content_handler
 
 updater = Updater(token=TOKEN, use_context=True)
