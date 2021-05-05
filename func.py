@@ -27,4 +27,4 @@ def chat_content_exec(update, context):
 
 
 start_handler = CommandHandler('start', start)
-chat_content_handler = MessageHandler(Filters.text, chat_content_exec),
+chat_content_handler = MessageHandler(Filters.text, chat_content_exec)
