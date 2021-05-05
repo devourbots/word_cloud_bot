@@ -10,7 +10,7 @@ bot = telegram.Bot(token=TOKEN)
 
 def start(update, context):
     try:
-        connector.get_connection()
+        connector.get_connection().keys()
         print('进入start函数')
         update.message.reply_text(
             '在呢！系统运行正常~',
