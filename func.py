@@ -20,10 +20,12 @@ def chat_content_exec(update, context):
     r = connector.get_connection()
     text = update.message.text
     chat_type = update.effective_chat.type
-    if chat_type != "supergroup":
-        return
     user_id = update.effective_user.id
     chat_id = update.effective_message.chat_id
+    if chat_type != "supergroup":
+        return
+    # if chat_id not in ["1231242141"]:
+    #     return
     try:
         username = update.effective_user.username
     except Exception as e:

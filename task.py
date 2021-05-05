@@ -127,5 +127,9 @@ def do_task():
         except Exception as e:
             print(e)
             continue
+
+
+def flush_redis():
+    r = connector.get_connection()
     r.flushall()
     print("已清空数据库")
