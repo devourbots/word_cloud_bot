@@ -1,6 +1,8 @@
 FROM rackspacedot/python37:latest
 RUN apt-get update -y
 RUN apt-get install git -y
+RUN rm -rf /etc/localtime
+RUN ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN cd /root \
     && git clone https://github.com/devourbots/word_cloud_bot.git
 RUN echo 'TOKEN = "这里输入机器人token"' > /root/word_cloud_bot/config.py
