@@ -1,7 +1,10 @@
+import time
+
 import connector
 import telegram
 from telegram.ext import CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from config import TOKEN
+import schedule
 
 bot = telegram.Bot(token=TOKEN)
 
@@ -38,6 +41,12 @@ def chat_content_exec(update, context):
         r.incrby("{}_total_message_amount".format(chat_id))
         r.hincrby("{}_user_message_amount".format(chat_id), username)
     print("---------------------------")
+
+
+def check_schedule():
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 start_handler = CommandHandler('start', start)

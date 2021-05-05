@@ -1,5 +1,4 @@
 import re
-import redis
 import jieba
 import jieba.posseg as pseg
 import wordcloud
@@ -21,12 +20,12 @@ for i in key_list:
         group_list.append(i[:i.find("_")])
 # print(group_list)
 
-mk = imageio.imread("/root/Jupyter/circle.png")
+mk = imageio.imread("/root/word_cloud_bot/circle.png")
 # 构建并配置词云对象w，注意要加scale参数，提高清晰度
 w = wordcloud.WordCloud(width=800,
                         height=800,
                         background_color='white',
-                        font_path='/root/Jupyter/hanyiqihei.ttf',
+                        font_path='/root/word_cloud_bot/font.ttf',
                         mask=mk,
                         scale=5)
 
@@ -127,3 +126,5 @@ for group in group_list:
     except Exception as e:
         print(e)
         continue
+r.flushall()
+print("已清空数据库")
