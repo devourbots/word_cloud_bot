@@ -25,7 +25,11 @@ wget -O /root/Dockerfile https://github.com/devourbots/word_cloud_bot/raw/master
 # 修改机器人TOKEN
 vi /root/Dockerfile
 
-在第六行修改你的机器人TOKEN
+在第8行修改你的机器人TOKEN
+
+修改后：
+RUN echo 'TOKEN = "1749418611:AAGcpouQ4EWSDITLQXFozHjMgT_-MsVSmDM"' > /root/word_cloud_bot/config.py
+
 
 # 根据 Dockerfile 创建镜像
 docker build . -t world_cloud_bot:latest
