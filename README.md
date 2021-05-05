@@ -1,7 +1,10 @@
+## 演示
+
+![xq9iR.png](https://s3.jpg.cm/2021/05/05/xq9iR.png)
+
 ## 配置要求
 
 内存：1G以上
-
 
 ## 安装方法
 
@@ -46,6 +49,8 @@ docker run -d --net=host world_cloud_bot:latest
 使用 `/start` 指令测试机器人与 Redis 数据库的连通情况
 
 将机器人拉入群组，设置为管理员（不需要其他权限），设置完毕
+
+![xqyvt.png](https://s3.jpg.cm/2021/05/05/xqyvt.png)
 
 ### 将机器人设置为仅自己群组可用
 
