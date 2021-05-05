@@ -29,11 +29,22 @@ tail -f /dev/null' > /root/entrypoint.sh
 # 创建 Dockerfile
 wget -O /root/Dockerfile https://github.com/devourbots/word_cloud_bot/raw/master/Dockerfile
 
-# 修改机器人TOKEN
+# 使用命令查看所有时区
+timedatectl list-timezones
+
+找到您所在的时区，例如：
+上海 Asia/Shanghai
+纽约 America/New_York
+
+# 编辑Dockerfile
 vi /root/Dockerfile
 
-在第8行修改你的机器人TOKEN
+# 在第5行修改服务器所属时区，原文件为：
+RUN ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+修改为纽约当地时，修改后：
+RUN ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
 
+# 在第8行修改你的机器人TOKEN
 修改后：
 RUN echo 'TOKEN = "1749418611:AAGcpouQ4EWSDITLQXFozHjMgT_-MsVSmDM"' > /root/word_cloud_bot/config.py
 
@@ -52,7 +63,9 @@ docker run -d --net=host world_cloud_bot:latest
 
 使用 `/start` 指令测试机器人与 Redis 数据库的连通情况
 
-将机器人拉入群组，设置为管理员（不需要其他权限），设置完毕
+将机器人拉入群组，设置为管理员（受机器人API所限，只有授予管理员权限后，机器人才能接收到所有用户的普通聊天文本，此机器人不需要其他权限，您可以将所有权限关闭）
+
+所有聊天内容每天定时清理，仅用于本地分词，无其他任何用途
 
 ![xqyvt.png](https://s3.jpg.cm/2021/05/05/xqyvt.png)
 
