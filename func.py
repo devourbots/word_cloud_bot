@@ -31,8 +31,8 @@ def chat_content_exec(update, context):
     # 限制为群组
     if chat_type != "supergroup":
         return
-    # 限制文字长度不能超过50字
-    if len(text) > 50:
+    # 限制文字长度不能超过80字
+    if len(text) > 80:
         return
     # 取消注释开启独享模式（仅授权群组可用）
     # if chat_id not in ["1231242141"]:
