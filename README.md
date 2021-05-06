@@ -55,6 +55,11 @@ docker build . -t world_cloud_bot:latest
 # 运行 Redis 镜像，此步在前
 docker run -d -p 6379:6379 redis:latest
 
+注意！！！
+请关闭服务器 6379 端口的外网访问权限！！！如果您的主机提供商提供了安全组策略（阿里云、腾讯云、AWS等等），可以在控制台关闭6379端口。
+如果您的主机商不支持自定义安全组，请根据您的发行版系统自行搜索防火墙关闭端口的方式。
+不要抱有侥幸心理！不要抱有侥幸心理！不要抱有侥幸心理！
+
 # 运行 机器人，此步在后
 docker run -d --net=host world_cloud_bot:latest
 ```
