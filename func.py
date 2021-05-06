@@ -46,12 +46,12 @@ def chat_content_exec(update, context):
         firstname = ""
         lastname = ""
         try:
-            firstname = user["firstname"]
+            firstname = str(user["first_name"])
         except Exception as e:
             print(e)
             print("用户没有设置 firstname")
         try:
-            lastname = user["last_name"]
+            lastname = str(user["last_name"])
         except Exception as e:
             print(e)
             print("用户没有设置 last_name")
@@ -80,6 +80,7 @@ def chat_content_exec(update, context):
             r.hincrby("{}_user_message_amount".format(chat_id), name)
         print("---------------------------")
     except Exception as e:
+        print(e)
         print("用户数据提取、入库错误")
 
 
