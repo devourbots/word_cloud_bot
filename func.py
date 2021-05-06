@@ -41,6 +41,25 @@ def chat_content_exec(update, context):
         username = update.effective_user.username
     except Exception as e:
         username = update.effective_user.id
+    user = update.message.from_user
+    try:
+        firstname = user["firstname"]
+    except Exception as e:
+        print("用户没有设置 firstname")
+        firstname = ""
+    try:
+        last_name = user["last_name"]
+    except Exception as e:
+        print("用户没有设置 last_name")
+        last_name = ""
+    if len(firstname) == 0 and len(last_name) == 0:
+        name = username
+    elif len(firstname) == 0 and len(last_name) != 0:
+        name = last_name
+    elif len(firstname) != 0 and len(last_name) == 0:
+        name = firstname
+    elif len(firstname) != 0 and len(last_name) != 0:
+        name = firstname + " " + last_name
     print("\n---------------------------")
     print("内容: " + text[:10])
     print("群组类型: " + str(chat_type))
@@ -55,7 +74,7 @@ def chat_content_exec(update, context):
         else:
             r.append("{}_chat_content".format(chat_id), text)
         r.incrby("{}_total_message_amount".format(chat_id))
-        r.hincrby("{}_user_message_amount".format(chat_id), username)
+        r.hincrby("{}_user_message_amount".format(chat_id), name)
     print("---------------------------")
 
 
