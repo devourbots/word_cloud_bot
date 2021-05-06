@@ -50,6 +50,8 @@ def do_task():
             word_amount = {}
             # print(word_amount)
             for word in word_list:
+                if word in ["。", "，", "！", "：", "“", "”", "!", ".", ",", ":", '"', "+", "-", "[", "]", "\\", "/"]:
+                    continue
                 # 判断该词是否之前已经出现
                 if word_amount.get(word) is not None:
                     word_amount[word] = word_amount.get(word) + 1

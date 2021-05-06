@@ -23,59 +23,64 @@ def start(update, context):
 
 
 def chat_content_exec(update, context):
-    r = connector.get_connection()
-    text = update.message.text
-    chat_type = update.effective_chat.type
-    user_id = update.effective_user.id
-    chat_id = update.effective_message.chat_id
-    # 限制为群组
-    if chat_type != "supergroup":
-        return
-    # 限制文字长度不能超过80字
-    if len(text) > 80:
-        return
-    # 取消注释开启独享模式（仅授权群组可用）
-    # if chat_id not in ["1231242141"]:
-    #     return
     try:
-        username = update.effective_user.username
-    except Exception as e:
-        username = update.effective_user.id
-    user = update.message.from_user
-    try:
-        firstname = user["firstname"]
-    except Exception as e:
-        print("用户没有设置 firstname")
+        r = connector.get_connection()
+        text = update.message.text
+        chat_type = update.effective_chat.type
+        user_id = update.effective_user.id
+        chat_id = update.effective_message.chat_id
+        # 限制为群组
+        if chat_type != "supergroup":
+            return
+        # 限制文字长度不能超过80字
+        if len(text) > 80:
+            return
+        # 取消注释开启独享模式（仅授权群组可用）
+        # if chat_id not in ["1231242141"]:
+        #     return
+        try:
+            username = update.effective_user.username
+        except Exception as e:
+            username = update.effective_user.id
+        user = update.message.from_user
         firstname = ""
-    try:
-        last_name = user["last_name"]
-    except Exception as e:
-        print("用户没有设置 last_name")
-        last_name = ""
-    if len(firstname) == 0 and len(last_name) == 0:
-        name = username
-    elif len(firstname) == 0 and len(last_name) != 0:
-        name = last_name
-    elif len(firstname) != 0 and len(last_name) == 0:
-        name = firstname
-    elif len(firstname) != 0 and len(last_name) != 0:
-        name = firstname + " " + last_name
-    print("\n---------------------------")
-    print("内容: " + text[:10])
-    print("群组类型: " + str(chat_type))
-    print("用户ID: " + str(user_id))
-    print("chat_id: " + str(chat_id))
-    if "/" in text:
-        print("这是一条指令信息，跳过")
-        return
-    else:
-        if text[-1] not in ["，", "。", "！", "：", "？", "!", "?", ",", ":", "."]:
-            r.append("{}_chat_content".format(chat_id), text + "。")
+        lastname = ""
+        try:
+            firstname = user["firstname"]
+        except Exception as e:
+            print(e)
+            print("用户没有设置 firstname")
+        try:
+            lastname = user["last_name"]
+        except Exception as e:
+            print(e)
+            print("用户没有设置 last_name")
+        if len(firstname) == 0 and len(lastname) == 0:
+            name = username
+        elif len(firstname) == 0 and len(lastname) != 0:
+            name = lastname
+        elif len(firstname) != 0 and len(lastname) == 0:
+            name = firstname
+        elif len(firstname) != 0 and len(lastname) != 0:
+            name = firstname + " " + lastname
+        print("\n---------------------------")
+        print("内容: " + text[:10])
+        print("群组类型: " + str(chat_type))
+        print("用户ID: " + str(user_id))
+        print("chat_id: " + str(chat_id))
+        if "/" in text:
+            print("这是一条指令信息，跳过")
+            return
         else:
-            r.append("{}_chat_content".format(chat_id), text)
-        r.incrby("{}_total_message_amount".format(chat_id))
-        r.hincrby("{}_user_message_amount".format(chat_id), name)
-    print("---------------------------")
+            if text[-1] not in ["，", "。", "！", "：", "？", "!", "?", ",", ":", "."]:
+                r.append("{}_chat_content".format(chat_id), text + "。")
+            else:
+                r.append("{}_chat_content".format(chat_id), text)
+            r.incrby("{}_total_message_amount".format(chat_id))
+            r.hincrby("{}_user_message_amount".format(chat_id), name)
+        print("---------------------------")
+    except Exception as e:
+        print("用户数据提取、入库错误")
 
 
 def check_schedule():
