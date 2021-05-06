@@ -66,8 +66,7 @@ docker run -d --net=host world_cloud_bot:latest
 
 [端口检测工具](http://tool.chinaz.com/port/), 请确保 6379 是关闭状态
 
-[![xlu8H.png](https://s3.jpg.cm/2021/05/06/xlu8H.png)](https://imagelol.com/image/xlu8H)
-
+![xlu8H.png](https://s3.jpg.cm/2021/05/06/xlu8H.png)
 
 ## 使用方法
 
