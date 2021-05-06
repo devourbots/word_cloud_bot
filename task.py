@@ -71,7 +71,7 @@ def do_task():
             # 获取发言用户数
             user_amount = len(r.hkeys("{}_user_message_amount".format(group)))
             # 获取所有用户发言数字典
-            user_message_amount = r.hgetall("-1001403536948_user_message_amount")
+            user_message_amount = r.hgetall("{}_user_message_amount".format(group))
             user_message_amount = sorted(user_message_amount.items(), key=lambda kv: (kv[1]), reverse=True)
             # print("排序后的用户：" + str(user_message_amount))
             top_5_user = ""
