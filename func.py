@@ -55,13 +55,13 @@ def chat_content_exec(update, context):
         except Exception as e:
             print(e)
             print("用户没有设置 last_name")
-        if len(firstname) == "None" and len(lastname) == "None":
+        if firstname == "None" and lastname == "None":
             name = username
-        elif len(firstname) == "None" and len(lastname) != "None":
+        elif firstname == "None" and lastname != "None":
             name = lastname
-        elif len(firstname) != "None" and len(lastname) == "None":
+        elif firstname != "None" and lastname == "None":
             name = firstname
-        elif len(firstname) != "None" and len(lastname) != "None":
+        elif firstname != "None" and lastname != "None":
             name = firstname + " " + lastname
         print("\n---------------------------")
         print("内容: " + text[:10])
