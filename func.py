@@ -43,26 +43,15 @@ def chat_content_exec(update, context):
         except Exception as e:
             username = update.effective_user.id
         user = update.message.from_user
-        firstname = ""
-        lastname = ""
-        try:
-            firstname = str(user["first_name"])
-        except Exception as e:
-            print(e)
-            print("用户没有设置 firstname")
-        try:
-            lastname = str(user["last_name"])
-        except Exception as e:
-            print(e)
-            print("用户没有设置 last_name")
-        if firstname == "None" and lastname == "None":
+        firstname = str(user["first_name"])
+        lastname = str(user["last_name"])
+        name = ""
+        if firstname != "None":
+            name = firstname + " "
+        if lastname != "None":
+            name += lastname
+        if len(name) == 0:
             name = username
-        elif firstname == "None" and lastname != "None":
-            name = lastname
-        elif firstname != "None" and lastname == "None":
-            name = firstname
-        elif firstname != "None" and lastname != "None":
-            name = firstname + " " + lastname
         print("\n---------------------------")
         print("内容: " + text[:10])
         print("群组类型: " + str(chat_type))
