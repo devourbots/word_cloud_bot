@@ -50,7 +50,9 @@ def do_task():
             word_amount = {}
             # print(word_amount)
             for word in word_list:
-                if word in ["。", "，", "！", "：", "“", "”", "!", ".", ",", ":", '"', "+", "-", "[", "]", "\\", "/"]:
+                if re.search(
+                        r"[。|，|、|？|！|,|.|!|?|\\|/|+|\-|`|~|·|@|#|￥|$|%|^|&|*|(|)|;|；|‘|’|“|”|'|_|=|\"]",
+                        word) is not None:
                     continue
                 # 判断该词是否之前已经出现
                 if word_amount.get(word) is not None:
