@@ -1,4 +1,6 @@
 import re
+import queue
+import threading
 import jieba
 import jieba.posseg as pseg
 import wordcloud
@@ -11,17 +13,10 @@ from config import TOKEN
 
 bot = telegram.Bot(token=TOKEN)
 
-mk = imageio.imread("/root/word_cloud_bot/circle.png")
-# 构建并配置词云对象w，注意要加scale参数，提高清晰度
-w = wordcloud.WordCloud(width=800,
-                        height=800,
-                        background_color='white',
-                        font_path='/root/word_cloud_bot/font.ttf',
-                        mask=mk,
-                        scale=5)
+task_queue = queue.Queue()
 
 
-def do_task():
+def schedule_task():
     try:
         r = connector.get_connection()
         key_list = r.keys()
@@ -32,7 +27,10 @@ def do_task():
         # print(group_list)
         for group in group_list:
             try:
-                generate(group)
+                # 网任务队列中添加任务
+                task_queue.put(group)
+                # threading.Thread(target=generate, args=(group,)).start()
+                # time.sleep(0.5)
             except Exception as e:
                 print("群组：{} | 词云数据分析生成失败，请查看报错信息".format(group))
                 print(e)
@@ -42,13 +40,53 @@ def do_task():
         print(e)
 
 
+def do_task():
+    while True:
+        group = task_queue.get()
+        try:
+            print("---------------------------")
+            print("群组: {} | 分析处理中...".format(group))
+            start_time = float(time.time())
+            generate(group)
+            stop_time = float(time.time())
+            print("当前群组处理耗时：" + str(stop_time - start_time))
+            print("---------------------------")
+        except Exception as e:
+            print("群组: {} | 处理失败，请检查报错！".format(group))
+            print(e)
+        time.sleep(1)
+
+
+def add_task(group):
+    task_queue.put(group)
+
+
+# 核心函数，分词统计
 def generate(group):
+    mk = imageio.imread("/root/word_cloud_bot/circle.png")
+    # 构建并配置词云对象w，注意要加scale参数，提高清晰度
+    w = wordcloud.WordCloud(width=800,
+                            height=800,
+                            background_color='white',
+                            font_path='/root/word_cloud_bot/font.ttf',
+                            mask=mk,
+                            scale=5)
     r = connector.get_connection()
     print("当前处理的群组：" + str(group))
-    start_time = float(time.time())
     # 生成词云图片
     jieba.enable_paddle()  # 启动paddle模式。 0.40版之后开始支持，早期版本不支持
-    words = pseg.cut(r.get("{}_chat_content".format(group)), use_paddle=True)  # paddle模式
+    chat_content = r.get("{}_chat_content".format(group))
+    if chat_content is None:
+        print("数据库中不存在此群组数据")
+        try:
+            bot.send_message(
+                chat_id=group,
+                text="数据库中不存在群组数据，请检查是否授予机器人管理员权限\n"
+            )
+        except Exception as e:
+            print("群组: {} | 机器人发送信息失败".format(group))
+        return
+    words = pseg.cut(chat_content, use_paddle=True)  # paddle模式
     word_list = []
     for word, flag in words:
         # print(word + "\t" + flag)
@@ -140,11 +178,10 @@ def generate(group):
 
     os.remove("{}_chat_word_cloud.png".format(group))
 
-    stop_time = float(time.time())
-    print("当前群组处理耗时：" + str(stop_time - start_time))
-
 
 def flush_redis():
     r = connector.get_connection()
     r.flushall()
     print("已清空数据库")
+
+
