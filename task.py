@@ -1,6 +1,5 @@
 import re
 import queue
-import threading
 import jieba
 import jieba.posseg as pseg
 import wordcloud
@@ -76,6 +75,7 @@ def generate(group):
     # 生成词云图片
     jieba.enable_paddle()  # 启动paddle模式。 0.40版之后开始支持，早期版本不支持
     chat_content = r.get("{}_chat_content".format(group))
+
     if chat_content is None:
         print("数据库中不存在此群组数据")
         try:
@@ -86,38 +86,23 @@ def generate(group):
         except Exception as e:
             print("群组: {} | 机器人发送信息失败".format(group))
         return
-    words = pseg.cut(chat_content, use_paddle=True)  # paddle模式
     word_list = []
-    for word, flag in words:
-        # print(word + "\t" + flag)
-        if flag in ["n", "nr", "nz", "PER", "f", "ns", "LOC", "s", "nt", "ORG", "nw"]:
-            # 判断该词是否有效，不为空格
-            if re.match(r"^\s+?$", word) is None:
-                word_list.append(word)
+    try:
+        words = pseg.cut(chat_content, use_paddle=True)  # paddle模式
+        for word, flag in words:
+            # print(word + "\t" + flag)
+            if flag in ["n", "nr", "nz", "PER", "f", "ns", "LOC", "s", "nt", "ORG", "nw"]:
+                # 判断该词是否有效，不为空格
+                if re.match(r"^\s+?$", word) is None:
+                    word_list.append(word)
+    except Exception as e:
+        print(e)
+        bot.send_message(
+            chat_id=group,
+            text="当前聊天数据量过小，无法生成词云，嗨起来吧~\n"
+        )
     # print(word_list)
 
-    # 分析高频词
-    word_amount = {}
-    # print(word_amount)
-    for word in word_list:
-        if re.search(
-                r"[。|，|、|？|！|,|.|!|?|\\|/|+|\-|`|~|·|@|#|￥|$|%|^|&|*|(|)|;|；|‘|’|“|”|'|_|=|\"]",
-                word) is not None:
-            continue
-        # 判断该词是否之前已经出现
-        if word_amount.get(word) is not None:
-            word_amount[word] = word_amount.get(word) + 1
-        else:
-            word_amount[word] = 1
-    # print(word_amount)
-    word_amount = sorted(word_amount.items(), key=lambda kv: (kv[1]), reverse=True)
-    # print("排序后的热词：" + str(word_amount))
-    hot_word_string = ""
-    # 默认展示前5位，少于5个则全部展示
-    for i in range(min(5, len(word_amount))):
-        hot_word_string += "\t\t\t\t\t\t\t\t" + "`" + str(word_amount[i][0]) + "`" + ": " + str(
-            word_amount[i][1]) + "\n"
-    # print(hot_word_string)
     # 获取消息总数
     total_message_amount = r.get("{}_total_message_amount".format(group))
 
@@ -128,60 +113,101 @@ def generate(group):
     # 获取所有用户发言数字典
     user_message_amount = r.hgetall("{}_user_message_amount".format(group))
     user_message_amount = sorted(user_message_amount.items(), key=lambda kv: (kv[1]), reverse=True)
-    # print("排序后的用户：" + str(user_message_amount))
-    top_5_user = ""
-    # 默认展示前5位，少于5个则全部展示
-    for i in range(min(5, len(user_message_amount))):
-        top_5_user += "\t\t\t\t\t\t\t\t" + "🎖`" + str(user_message_amount[i][0]) + "`" + " 贡献: " + str(
-            user_message_amount[i][1]) + "\n"
-    # print(top_5_user)
-    string = " ".join(word_list)
-    # 将string变量传入w的generate()方法，给词云输入文字
-    w.generate(string)
-    # 将词云图片导出到当前文件夹
-    w.to_file('{}_chat_word_cloud.png'.format(group))
-    bot.send_message(
-        chat_id=group,
-        text="🎤 今日话题榜 🎤\n"
-             "📅 {}\n"
-             "⏱ 截至今天{}\n"
-             "🗣️ 本群{}位朋友共产生{}条发言\n"
-             "🤹‍ 大家今天讨论最多的是：\n\n"
-             "{}\n"
-             "看下有没有你感兴趣的话题? 👏".format(
-            time.strftime("%Y年%m月%d日", time.localtime()),
-            time.strftime("%H:%M", time.localtime()),
-            user_amount,
-            total_message_amount,
-            hot_word_string),
-        parse_mode="Markdown"
-    )
 
-    bot.send_message(
-        chat_id=group,
-        text="🏵 今日活跃用户排行榜 🏵\n"
-             "📅 {}\n"
-             "⏱ 截至今天{}\n\n"
-             "{}\n"
-             "感谢这些朋友今天的分享! 👏 \n"
-             "遇到问题,向他们请教说不定有惊喜😃".format(
-            time.strftime("%Y年%m月%d日", time.localtime()),
-            time.strftime("%H:%M", time.localtime()),
-            top_5_user),
-        parse_mode="Markdown"
-    )
+    if len(word_list) > 0:
+        # 分析高频词
+        word_amount = {}
+        # print(word_amount)
+        for word in word_list:
+            if re.search(
+                    r"[。|，|、|？|！|,|.|!|?|\\|/|+|\-|`|~|·|@|#|￥|$|%|^|&|*|(|)|;|；|‘|’|“|”|'|_|=|\"]",
+                    word) is not None:
+                continue
+            # 判断该词是否之前已经出现
+            if word_amount.get(word) is not None:
+                word_amount[word] = word_amount.get(word) + 1
+            else:
+                word_amount[word] = 1
+        # print(word_amount)
+        word_amount = sorted(word_amount.items(), key=lambda kv: (kv[1]), reverse=True)
+        if len(word_amount) > 0:
+            # print("排序后的热词：" + str(word_amount))
+            hot_word_string = ""
+            # 默认展示前5位，少于5个则全部展示
+            for i in range(min(5, len(word_amount))):
+                hot_word_string += "\t\t\t\t\t\t\t\t" + "`" + str(word_amount[i][0]) + "`" + ": " + str(
+                    word_amount[i][1]) + "\n"
+            # print(hot_word_string)
+            bot.send_message(
+                chat_id=group,
+                text="🎤 今日话题榜 🎤\n"
+                     "📅 {}\n"
+                     "⏱ 截至今天{}\n"
+                     "🗣️ 本群{}位朋友共产生{}条发言\n"
+                     "🤹‍ 大家今天讨论最多的是：\n\n"
+                     "{}\n"
+                     "看下有没有你感兴趣的话题? 👏".format(
+                    time.strftime("%Y年%m月%d日", time.localtime()),
+                    time.strftime("%H:%M", time.localtime()),
+                    user_amount,
+                    total_message_amount,
+                    hot_word_string),
+                parse_mode="Markdown"
+            )
+    else:
+        bot.send_message(
+            chat_id=group,
+            text="当前聊天数据量过小，嗨起来吧~"
+        )
 
-    bot.send_photo(
-        chat_id=group,
-        photo=open("{}_chat_word_cloud.png".format(group), "rb")
-    )
+    if len(user_message_amount) > 0:
+        # print("排序后的用户：" + str(user_message_amount))
+        top_5_user = ""
+        # 默认展示前5位，少于5个则全部展示
+        for i in range(min(5, len(user_message_amount))):
+            top_5_user += "\t\t\t\t\t\t\t\t" + "🎖`" + str(user_message_amount[i][0]) + "`" + " 贡献: " + str(
+                user_message_amount[i][1]) + "\n"
+        # print(top_5_user)
+        string = " ".join(word_list)
+        # 将string变量传入w的generate()方法，给词云输入文字
+        w.generate(string)
+        # 将词云图片导出到当前文件夹
+        w.to_file('{}_chat_word_cloud.png'.format(group))
 
-    os.remove("{}_chat_word_cloud.png".format(group))
+        bot.send_message(
+            chat_id=group,
+            text="🏵 今日活跃用户排行榜 🏵\n"
+                 "📅 {}\n"
+                 "⏱ 截至今天{}\n\n"
+                 "{}\n"
+                 "感谢这些朋友今天的分享! 👏 \n"
+                 "遇到问题,向他们请教说不定有惊喜😃".format(
+                time.strftime("%Y年%m月%d日", time.localtime()),
+                time.strftime("%H:%M", time.localtime()),
+                top_5_user),
+            parse_mode="Markdown"
+        )
+    else:
+        bot.send_message(
+            chat_id=group,
+            text="当前聊天数据量过小，嗨起来吧~"
+        )
+
+    try:
+        bot.send_photo(
+            chat_id=group,
+            photo=open("{}_chat_word_cloud.png".format(group), "rb")
+        )
+        os.remove("{}_chat_word_cloud.png".format(group))
+    except Exception as e:
+        print(e)
+        bot.send_message(
+            chat_id=group,
+            text="当前聊天数据量过小，嗨起来吧~"
+        )
 
 
 def flush_redis():
     r = connector.get_connection()
     r.flushall()
     print("已清空数据库")
-
-

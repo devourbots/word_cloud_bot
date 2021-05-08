@@ -3,7 +3,7 @@ import time
 import connector
 import telegram
 from telegram.ext import CommandHandler, MessageHandler, Filters
-from config import TOKEN, LIMIT_COUNT, EX_TIME
+from config import TOKEN, LIMIT_COUNT
 import schedule
 from task import add_task
 
@@ -37,6 +37,7 @@ def rank(update, context):
         # 限制为群组
         if chat_type != "supergroup":
             update.message.reply_text("此命令只有在群组中有效")
+            return
         if r.exists("{}_frequency_limit".format(chat_id)):
             r.setrange("{}_frequency_limit".format(chat_id), 0, int(r.get("{}_frequency_limit".format(chat_id))) + 1)
         else:
