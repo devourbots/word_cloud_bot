@@ -57,7 +57,7 @@ def rank(update, context):
             update.message.reply_text("该群组在这个小时内的生成配额已经用完，请稍后再试~")
             return
         add_task(chat_id)
-        print("群组: {}，用户: {}|{} 发起了主动触发请求".format(username, user_id, chat_id))
+        print("群组: {}，用户: {}|{} 发起了主动触发请求".format(chat_id, username, user_id, ))
         update.message.reply_text("统计数据将在分析完毕后发送到当前群组，请稍等~")
     except Exception as e:
         print("主动触发任务失败，请检查")

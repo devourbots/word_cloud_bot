@@ -24,6 +24,7 @@ def schedule_task():
             if "chat_content" in i:
                 group_list.append(i[:i.find("_")])
         # print(group_list)
+        print("运行定时任务，让任务队列中添加任务，任务数量：{}".format(len(group_list)))
         for group in group_list:
             try:
                 # 网任务队列中添加任务
@@ -53,6 +54,10 @@ def do_task():
         except Exception as e:
             print("群组: {} | 处理失败，请检查报错！".format(group))
             print(e)
+            bot.send_message(
+                chat_id=group,
+                text="当前聊天数据量过小，嗨起来吧~"
+            )
         time.sleep(1)
 
 
@@ -79,29 +84,23 @@ def generate(group):
     if chat_content is None:
         print("数据库中不存在此群组数据")
         try:
+            time.sleep(1)
             bot.send_message(
                 chat_id=group,
-                text="数据库中不存在群组数据，请检查是否授予机器人管理员权限\n"
+                text="数据库中不存在群组数据，请检查是否授予机器人管理员权限，并通过聊天添加数据量，嗨起来吧~\n"
             )
         except Exception as e:
             print("群组: {} | 机器人发送信息失败".format(group))
         return
     word_list = []
-    try:
-        words = pseg.cut(chat_content, use_paddle=True)  # paddle模式
-        for word, flag in words:
-            # print(word + "\t" + flag)
-            if flag in ["n", "nr", "nz", "PER", "f", "ns", "LOC", "s", "nt", "ORG", "nw"]:
-                # 判断该词是否有效，不为空格
-                if re.match(r"^\s+?$", word) is None:
-                    word_list.append(word)
-    except Exception as e:
-        print(e)
-        bot.send_message(
-            chat_id=group,
-            text="当前聊天数据量过小，无法生成词云，嗨起来吧~\n"
-        )
-    # print(word_list)
+    words = pseg.cut(chat_content, use_paddle=True)  # paddle模式
+    for word, flag in words:
+        # print(word + "\t" + flag)
+        if flag in ["n", "nr", "nz", "PER", "f", "ns", "LOC", "s", "nt", "ORG", "nw"]:
+            # 判断该词是否有效，不为空格
+            if re.match(r"^\s+?$", word) is None:
+                word_list.append(word)
+        # print(word_list)
 
     # 获取消息总数
     total_message_amount = r.get("{}_total_message_amount".format(group))
@@ -205,6 +204,7 @@ def generate(group):
             chat_id=group,
             text="当前聊天数据量过小，嗨起来吧~"
         )
+        return
 
 
 def flush_redis():
