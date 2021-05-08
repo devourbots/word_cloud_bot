@@ -46,7 +46,7 @@ RUN ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
 
 # 在第8行修改你的机器人TOKEN
 修改后：
-RUN sed '1c TOKEN = "1749418611:AAGcpouQ4EWSDITLQXFozHjMgT_-MsVSmDM"' /root/word_cloud_bot/config.py
+RUN sed -i '1c TOKEN = "1749418611:AAGcpouQ4EWSDITLQXFozHjMgT_-MsVSmDM"' /root/word_cloud_bot/config.py
 
 
 # 根据 Dockerfile 创建镜像
