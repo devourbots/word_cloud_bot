@@ -43,12 +43,12 @@ timedatectl list-timezones
 # 编辑Dockerfile
 vi /root/Dockerfile
 
-# 在第5行修改服务器所属时区，原文件为：
+# 在第7行修改服务器所属时区，原文件为：
 RUN ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 修改为纽约当地时，修改后：
 RUN ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
 
-# 在第8行修改你的机器人TOKEN
+# 在第10行修改你的机器人TOKEN
 修改后：
 RUN sed -i '1c TOKEN = "1749418611:AAGcpouQ4EWSDITLQXFozHjMgT_-MsVSmDM"' /root/word_cloud_bot/config.py
 
