@@ -1,3 +1,7 @@
+## 当前版本
+
+v2.2
+
 ## 更新维护日志
 
 [更新维护日志](https://github.com/devourbots/word_cloud_bot/wiki/%E6%9B%B4%E6%96%B0%E7%BB%B4%E6%8A%A4%E6%97%A5%E5%BF%97)
