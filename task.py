@@ -52,12 +52,8 @@ def do_task():
             print("当前群组处理耗时：" + str(stop_time - start_time))
             print("---------------------------")
         except Exception as e:
-            print("群组: {} | 处理失败，请检查报错！".format(group))
+            print("群组: {} | 处理失败，可能是机器人已经被移出群组，请检查报错！".format(group))
             print(e)
-            bot.send_message(
-                chat_id=group,
-                text="当前聊天数据量过小，嗨起来吧~"
-            )
         time.sleep(1)
 
 
@@ -167,12 +163,6 @@ def generate(group):
             top_5_user += "\t\t\t\t\t\t\t\t" + "🎖`" + str(user_message_amount[i][0]) + "`" + " 贡献: " + str(
                 user_message_amount[i][1]) + "\n"
         # print(top_5_user)
-        string = " ".join(word_list)
-        # 将string变量传入w的generate()方法，给词云输入文字
-        w.generate(string)
-        # 将词云图片导出到当前文件夹
-        w.to_file('{}_chat_word_cloud.png'.format(group))
-
         bot.send_message(
             chat_id=group,
             text="🏵 今日活跃用户排行榜 🏵\n"
@@ -193,6 +183,11 @@ def generate(group):
         )
 
     try:
+        string = " ".join(word_list)
+        # 将string变量传入w的generate()方法，给词云输入文字
+        w.generate(string)
+        # 将词云图片导出到当前文件夹
+        w.to_file('{}_chat_word_cloud.png'.format(group))
         bot.send_photo(
             chat_id=group,
             photo=open("{}_chat_word_cloud.png".format(group), "rb")
@@ -200,11 +195,11 @@ def generate(group):
         os.remove("{}_chat_word_cloud.png".format(group))
     except Exception as e:
         print(e)
-        bot.send_message(
-            chat_id=group,
-            text="当前聊天数据量过小，嗨起来吧~"
-        )
-        return
+        print("词云图片生成失败")
+        # bot.send_message(
+        #     chat_id=group,
+        #     text="当前聊天数据量过小，嗨起来吧~"
+        # )
 
 
 def flush_redis():

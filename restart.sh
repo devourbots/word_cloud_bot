@@ -9,7 +9,7 @@ do
         us=`free | awk 'NR==2{print $3}'`
         to=`free | awk 'NR==2{print $2}'`
         mem=`expr "scale=2;($us-$bu-$ca)/$to" |bc -l | cut -d. -f2`
-        if(($mem >= 75))
+        if(($mem >= 90))
         then
         echo "restart"
         killall -9 python3
