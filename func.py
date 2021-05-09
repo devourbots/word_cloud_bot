@@ -3,7 +3,7 @@ import time
 import connector
 import telegram
 from telegram.ext import CommandHandler, MessageHandler, Filters
-from config import TOKEN, LIMIT_COUNT
+from config import TOKEN, LIMIT_COUNT, EXCLUSIVE_MODE
 import schedule
 from task import add_task
 
@@ -77,9 +77,9 @@ def chat_content_exec(update, context):
         # 限制文字长度不能超过80字
         if len(text) > 80:
             return
-        # 取消注释开启独享模式（仅授权群组可用）
-        # if chat_id not in ["1231242141"]:
-        #     return
+        # 独享模式（仅授权群组可用）
+        if chat_id not in ["1231242141"] and EXCLUSIVE_MODE == 1:
+            return
         try:
             username = update.effective_user.username
         except Exception as e:
