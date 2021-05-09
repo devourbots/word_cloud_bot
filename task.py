@@ -45,7 +45,7 @@ def do_task():
         group = task_queue.get()
         try:
             print("---------------------------")
-            print("群组: {} | 分析处理中...".format(group))
+            print("群组: {} | 分析处理中... | 剩余任务数量 {}".format(group, task_queue.qsize()))
             start_time = float(time.time())
             generate(group)
             stop_time = float(time.time())
