@@ -111,7 +111,7 @@ def generate(group):
     user_amount = len(r.hkeys("{}_user_message_amount".format(group)))
     # 获取所有用户发言数字典
     user_message_amount = r.hgetall("{}_user_message_amount".format(group))
-    user_message_amount = sorted(user_message_amount.items(), key=lambda kv: (kv[1]), reverse=True)
+    user_message_amount = sorted(user_message_amount.items(), key=lambda kv: (int(kv[1])), reverse=True)
 
     if len(word_list) > 0:
         # 分析高频词
@@ -128,7 +128,7 @@ def generate(group):
             else:
                 word_amount[word] = 1
         # print(word_amount)
-        word_amount = sorted(word_amount.items(), key=lambda kv: (kv[1]), reverse=True)
+        word_amount = sorted(word_amount.items(), key=lambda kv: (int(kv[1])), reverse=True)
         if len(word_amount) > 0:
             # print("排序后的热词：" + str(word_amount))
             hot_word_string = ""
