@@ -3,7 +3,7 @@ import time
 import connector
 import telegram
 from telegram.ext import CommandHandler, MessageHandler, Filters
-from config import TOKEN, LIMIT_COUNT, EXCLUSIVE_MODE
+from config import TOKEN, LIMIT_COUNT, EXCLUSIVE_MODE, RANK_COMMAND_MODE
 import schedule
 from task import add_task
 
@@ -38,6 +38,19 @@ def rank(update, context):
         if chat_type != "supergroup":
             update.message.reply_text("此命令只有在群组中有效")
             return
+        if RANK_COMMAND_MODE == 1:
+            try:
+                chat_member = bot.get_chat_member(chat_id, user_id)
+                status = chat_member["status"]
+                print("此用户在群组中身份为： {}".format(status))
+                if status == "creator" or status == "administrator":
+                    print("用户权限正确")
+                else:
+                    update.message.reply_text("此命令仅对管理员开放")
+                    return
+            except Exception as e:
+                print(e)
+                print("获取用户身份失败")
         if r.exists("{}_frequency_limit".format(chat_id)):
             r.setrange("{}_frequency_limit".format(chat_id), 0, int(r.get("{}_frequency_limit".format(chat_id))) + 1)
         else:
@@ -78,7 +91,8 @@ def chat_content_exec(update, context):
         if len(text) > 80:
             return
         # 独享模式（仅授权群组可用）
-        if chat_id not in ["1231242141"] and EXCLUSIVE_MODE == 1:
+        if EXCLUSIVE_MODE == 1 and chat_id not in ["1231242141"]:
+            print(chat_id + " 为未认证群组，取消入库")
             return
         try:
             username = update.effective_user.username

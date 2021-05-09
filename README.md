@@ -85,20 +85,33 @@ docker run -d --net=host world_cloud_bot:latest
 
 ### 将机器人设置为仅自己群组可用
 
-如果您不想让别人使用你的机器人，那么可以将 func.py 文件中的
-```angular2html
-    # if chat_id not in ["1231242141"]:
-    #     return
-```
-该段注释取消，并将自己的群组ID加入到列表中。
+如何编辑 Docker 容器中的文件请自行 Google
+
+如果您不想让别人使用你的机器人，那么可以将 `config.py` 文件中的 `EXCLUSIVE_MODE = 0`改为 `EXCLUSIVE_MODE = 1`
+
+![DGbSy.png](https://s3.jpg.cm/2021/05/09/DGbSy.png)
+
+编辑 `/root/word_cloud_bot/func.py`，在 94 行左右，将自己的 群组ID 加入到列表中。
+这里的`EXCLUSIVE_MODE = 1`不要改动，注意区分！
+
 
 例如我两个的群组ID分别为：-127892174935、-471892571924
 
 那么修改后为：
 ```angular2html
-    if chat_id not in ["-127892174935", "-471892571924"]:
-        return
+if EXCLUSIVE_MODE == 1 and chat_id not in ["-127892174935", "-471892571924"]:
+    print(chat_id + " 为未认证群组，取消入库")
+    return
 ```
+
+![DGHR5.png](https://s3.jpg.cm/2021/05/09/DGHR5.png)
+
+### 设置 /rank 指令对普通用户开放
+
+编辑 `/root/word_cloud_bot/config.py`， 将 `RANK_COMMAND_MODE = 1` 改为 `RANK_COMMAND_MODE = 0`
+
+![DGJuC.png](https://s3.jpg.cm/2021/05/09/DGJuC.png)
+
 
 ### 信息推送密度
 

@@ -29,8 +29,6 @@ def schedule_task():
             try:
                 # 网任务队列中添加任务
                 task_queue.put(group)
-                # threading.Thread(target=generate, args=(group,)).start()
-                # time.sleep(0.5)
             except Exception as e:
                 print("群组：{} | 词云数据分析生成失败，请查看报错信息".format(group))
                 print(e)
