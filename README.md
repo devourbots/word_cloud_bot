@@ -1,13 +1,13 @@
 ## 当前版本
 
-v2.2
+v2.3
 
 ## 更新维护日志
 
 [更新维护日志](https://github.com/devourbots/word_cloud_bot/wiki/%E6%9B%B4%E6%96%B0%E7%BB%B4%E6%8A%A4%E6%97%A5%E5%BF%97)
 
 ## 有问题请加群组反馈
-Telegram 交流反馈群组 [点击加入](https://t.me/joinchat/HO9r-CLAudrxugPY)
+Telegram 交流反馈群组 [点击加入](https://t.me/devourbots)
 
 ## 演示
 
