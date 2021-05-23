@@ -113,7 +113,7 @@ def generate(group):
         # print(word_amount)
         for word in word_list:
             if re.search(
-                    r"[。|，|、|？|！|,|.|!|?|\\|/|+|\-|`|~|·|@|#|￥|$|%|^|&|*|(|)|;|；|‘|’|“|”|'|_|=|\"]",
+                    r"[。|，|、|？|！|,|.|!|?|\\|/|+|\-|`|~|·|@|#|￥|$|%|^|&|*|(|)|;|；|‘|’|“|”|'|_|=|•|·|…|\"]",
                     word) is not None:
                 continue
             # 判断该词是否之前已经出现
@@ -158,7 +158,8 @@ def generate(group):
         top_5_user = ""
         # 默认展示前5位，少于5个则全部展示
         for i in range(min(5, len(user_message_amount))):
-            top_5_user += "\t\t\t\t\t\t\t\t" + "🎖`" + str(user_message_amount[i][0]) + "`" + " 贡献: " + str(
+            dis_name = str(user_message_amount[i][0])
+            top_5_user += "\t\t\t\t\t\t\t\t" + "🎖`" + dis_name[:min(8, len(dis_name))] + "`" + " 贡献: " + str(
                 user_message_amount[i][1]) + "\n"
         # print(top_5_user)
         bot.send_message(
