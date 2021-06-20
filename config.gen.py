@@ -20,3 +20,6 @@ REDIS_CONFIG = {'host': '127.0.0.1', 'port': 6379, 'db': 1}
 
 # 拥有者 id 配置
 OWNER = 0
+
+# 日志频道 id 0 为不启用
+CHANNEL = 0

@@ -8,7 +8,7 @@ import telegram
 import time
 import os
 import connector
-from config import TOKEN, FRONT
+from config import TOKEN, FRONT, CHANNEL
 
 bot = telegram.Bot(token=TOKEN)
 
@@ -24,7 +24,7 @@ def schedule_task():
             if "chat_content" in i:
                 group_list.append(i[:i.find("_")])
         # print(group_list)
-        print("运行定时任务，让任务队列中添加任务，任务数量：{}".format(len(group_list)))
+        print("运行定时任务，向任务队列中添加任务，任务数量：{}".format(len(group_list)))
         for group in group_list:
             try:
                 # 向任务队列中添加任务
@@ -49,9 +49,20 @@ def do_task():
             stop_time = float(time.time())
             print("当前群组处理耗时：" + str(stop_time - start_time))
             print("---------------------------")
+            ctext = f'#WORDCLOUD \n' \
+                    f'群组 ID：`{group}`\n' \
+                    f'执行操作：`生成词云`\n' \
+                    f'结果：`成功`\n' \
+                    f'处理耗时：`{(stop_time - start_time)[:5]}`'
         except Exception as e:
             print("群组: {} | 处理失败，可能是机器人已经被移出群组，请检查报错！".format(group))
             print(e)
+            ctext = f'#WORDCLOUD #SCHEDULE \n' \
+                    f'群组 ID：`{group}`\n' \
+                    f'执行操作：`生成词云`\n' \
+                    f'结果：`失败`\n'
+        if not CHANNEL == 0:
+            bot.send_message(chat_id=CHANNEL, text=ctext, parse_mode="Markdown")
         time.sleep(1)
 
 
@@ -166,7 +177,7 @@ def generate(group):
             chat_id=group,
             photo=open(img_path, "rb"),
             caption=text,
-            parse_mode='markdown',
+            parse_mode='Markdown',
             disable_notification=True
         )
     except Exception as e:
