@@ -5,7 +5,8 @@ import schedule
 from task import schedule_task, flush_redis, do_task
 import threading
 
-schedule.every().day.at('11:00').do(schedule_task)
+# 开始定时任务 - 群组分析
+schedule.every().day.at('12:00').do(schedule_task)
 schedule.every().day.at('18:00').do(schedule_task)
 schedule.every().day.at('23:30').do(schedule_task)
 schedule.every().day.at('23:59').do(flush_redis)

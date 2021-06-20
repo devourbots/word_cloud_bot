@@ -1,6 +1,8 @@
 import redis
+from config import REDIS_CONFIG
 
-pool = redis.ConnectionPool(host='127.0.0.1', port=6379, encoding='utf8', decode_responses=True)
+pool = redis.ConnectionPool(host=REDIS_CONFIG['host'], port=REDIS_CONFIG['port'], db=REDIS_CONFIG['db'],
+                            encoding='utf8', decode_responses=True)
 
 
 def get_connection():
