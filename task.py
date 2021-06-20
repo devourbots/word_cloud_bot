@@ -171,6 +171,7 @@ def generate(group):
         )
     except Exception as e:
         print(e)
+        r.delete('{}_chat_content'.format(group))
         print("发送结果失败")
 
     # 删除图片
