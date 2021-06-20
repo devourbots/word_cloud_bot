@@ -82,10 +82,7 @@ def rank(update, context):
             r.expireat("{}_frequency_limit".format(chat_id), ex_time)
         count = int(r.get("{}_frequency_limit".format(chat_id)))
         if count > LIMIT_COUNT:
-            try:
-                bot.edit_message_text(chat_id=chat_id, message_id=msg.message_id, text="该群组在这个小时内的生成配额已经用完，请稍后再试~")
-            except:
-                pass
+            bot.edit_message_text(chat_id=chat_id, message_id=msg.message_id, text="该群组在这个小时内的生成配额已经用完，请稍后再试~")
             return
         add_task(chat_id)
         print("群组: {}，用户: {}|{} 发起了主动触发请求".format(chat_id, username, user_id, ))
@@ -94,11 +91,8 @@ def rank(update, context):
                     f'群组 ID：`{chat_id}`\n' \
                     f'用户 ID：`{user_id}' \
                     f'执行操作：`主动生成词云`\n'
-            bot.send_message(chat_id=chat_id, text=ctext, parse_mode="Markdown")
-        try:
-            bot.edit_message_text(chat_id=chat_id, message_id=msg.message_id, text="统计数据将在分析完毕后发送到当前群组，请稍等~")
-        except:
-            pass
+            bot.send_message(chat_id=CHANNEL, text=ctext, parse_mode="Markdown")
+        bot.edit_message_text(chat_id=chat_id, message_id=msg.message_id, text="统计数据将在分析完毕后发送到当前群组，请稍等~")
     except Exception as e:
         print("主动触发任务失败，请检查")
         print(e)

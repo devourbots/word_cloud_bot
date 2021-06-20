@@ -53,7 +53,7 @@ def do_task():
                     f'群组 ID：`{group}`\n' \
                     f'执行操作：`生成词云`\n' \
                     f'结果：`成功`\n' \
-                    f'处理耗时：`{(stop_time - start_time)[:5]}`'
+                    f'处理耗时：`{str(stop_time - start_time)[:5]}`'
         except Exception as e:
             print("群组: {} | 处理失败，可能是机器人已经被移出群组，请检查报错！".format(group))
             print(e)
