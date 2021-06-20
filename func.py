@@ -42,10 +42,6 @@ def rank(update, context):
         if chat_type != "supergroup":
             update.message.reply_text("此命令只有在群组中有效！")
             return
-        try:
-            msg = update.message.reply_text("正在添加任务，请稍等~")
-        except:
-            pass
         if RANK_COMMAND_MODE:
             try:
                 chat_member = bot.get_chat_member(chat_id, user_id)
@@ -54,16 +50,8 @@ def rank(update, context):
                 if status == "creator" or status == "administrator":
                     print("用户权限正确")
                 else:
-                    try:
-                        bot.delete_message(chat_id=chat_id, message_id=msg.message_id)
-                    except:
-                        pass
                     return
             except Exception as e:
-                try:
-                    bot.delete_message(chat_id=chat_id, message_id=msg.message_id)
-                except:
-                    pass
                 print(e)
                 print("获取用户身份失败")
         if r.exists("{}_frequency_limit".format(chat_id)):
@@ -82,7 +70,7 @@ def rank(update, context):
             r.expireat("{}_frequency_limit".format(chat_id), ex_time)
         count = int(r.get("{}_frequency_limit".format(chat_id)))
         if count > LIMIT_COUNT:
-            bot.edit_message_text(chat_id=chat_id, message_id=msg.message_id, text="该群组在这个小时内的生成配额已经用完，请稍后再试~")
+            update.message.reply_text("该群组在这个小时内的生成配额已经用完，请稍后再试~")
             return
         add_task(chat_id)
         print("群组: {}，用户: {}|{} 发起了主动触发请求".format(chat_id, username, user_id, ))
@@ -92,7 +80,7 @@ def rank(update, context):
                     f'用户 ID：`{user_id}' \
                     f'执行操作：`主动生成词云`\n'
             bot.send_message(chat_id=CHANNEL, text=ctext, parse_mode="Markdown")
-        bot.edit_message_text(chat_id=chat_id, message_id=msg.message_id, text="统计数据将在分析完毕后发送到当前群组，请稍等~")
+        update.message.reply_text("统计数据将在分析完毕后发送到当前群组，请稍等~")
     except Exception as e:
         print("主动触发任务失败，请检查")
         print(e)
