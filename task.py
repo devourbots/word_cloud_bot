@@ -99,6 +99,9 @@ def generate(group):
     user_message_amount = r.hgetall("{}_user_message_amount".format(group))
     user_message_amount = sorted(user_message_amount.items(), key=lambda kv: (int(kv[1])), reverse=True)
 
+    # 截至时间
+    date = time.strftime("%Y年%m月%d日", time.localtime()) + ' ⏱ ' + time.strftime("%H:%M", time.localtime())
+    text = f'📅 截至 {date}\n'
     # 分析高频词
     if len(word_list) > 0:
         word_amount = {}
@@ -120,15 +123,15 @@ def generate(group):
             hot_word_string = ""
             # 默认展示前5位，少于5个则全部展示
             for i in range(min(5, len(word_amount))):
-                hot_word_string += "\t\t\t\t\t\t\t\t" + "👥`" + str(word_amount[i][0]) + "`" + "：" + str(
+                hot_word_string += "\t\t\t\t\t\t\t\t" + "👥 `" + str(word_amount[i][0]) + "`" + "：" + str(
                     word_amount[i][1]) + "\n"
             # print(hot_word_string)
-            text = f"🗣️ 本群{user_amount}位朋友共产生{total_message_amount}条发言\n" \
-                   f"🤹‍ 大家今天讨论最多的是：\n\n{hot_word_string}\n"
+            text += f"🗣️ 本群 {user_amount} 位成员共产生 {total_message_amount} 条发言\n" \
+                    f"🤹‍ 大家今天讨论最多的是：\n\n{hot_word_string}\n"
         else:
-            text = '无法分析出当前群组的热词列表，可能是数据量过小，嗨起来吧~\n'
+            text += '无法分析出当前群组的热词列表，可能是数据量过小，嗨起来吧~\n'
     else:
-        text = '无法分析出当前群组的热词列表，可能是数据量过小，嗨起来吧~\n'
+        text += '无法分析出当前群组的热词列表，可能是数据量过小，嗨起来吧~\n'
 
     # 分析活跃用户
     if len(user_message_amount) > 0:
@@ -137,10 +140,10 @@ def generate(group):
         # 默认展示前5位，少于5个则全部展示
         for i in range(min(5, len(user_message_amount))):
             dis_name = str(user_message_amount[i][0])
-            top_5_user += "\t\t\t\t\t\t\t\t" + "🎖`" + dis_name[:min(8, len(dis_name))] + "`" + " 贡献：" + str(
+            top_5_user += "\t\t\t\t\t\t\t\t" + "🎖 `" + dis_name[:min(8, len(dis_name))] + "`" + " 贡献：" + str(
                 user_message_amount[i][1]) + "\n"
         # print(top_5_user)
-        text += f"🏵 今日活跃用户排行榜 🏵\n\n{top_5_user}"
+        text += f"🏵 今日活跃用户排行榜：\n\n{top_5_user}"
     else:
         text = '无法分析出当前群组的活跃用户列表，可能是数据量过小，嗨起来吧~'
 
