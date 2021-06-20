@@ -77,8 +77,8 @@ def rank(update, context):
         if not CHANNEL == 0:
             ctext = f'#WORDCLOUD #APPLY \n' \
                     f'群组 ID：`{chat_id}`\n' \
-                    f'用户 ID：`{user_id}' \
-                    f'执行操作：`主动生成词云`\n'
+                    f'用户 ID：`{user_id}`\n' \
+                    f'执行操作：`主动生成词云`'
             bot.send_message(chat_id=CHANNEL, text=ctext, parse_mode="Markdown")
         update.message.reply_text("统计数据将在分析完毕后发送到当前群组，请稍等~")
     except Exception as e:
