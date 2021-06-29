@@ -24,7 +24,7 @@ def schedule_task():
             if "chat_content" in i:
                 group_list.append(i[:i.find("_")])
         # print(group_list)
-        print("运行定时任务，让任务队列中添加任务，任务数量：{}".format(len(group_list)))
+        print("运行定时任务，向任务队列中添加任务，任务数量：{}".format(len(group_list)))
         for group in group_list:
             try:
                 # 网任务队列中添加任务
@@ -92,7 +92,7 @@ def generate(group):
         # print(word + "\t" + flag)
         if flag in ["n", "nr", "nz", "PER", "f", "ns", "LOC", "s", "nt", "ORG", "nw"]:
             # 判断该词是否有效，不为空格
-            if re.match(r"^\s+?$", word) is None:
+            if re.match(r"^\s+?$", word) is None and len(word) > 1:
                 word_list.append(word)
         # print(word_list)
 

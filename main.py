@@ -13,7 +13,7 @@ schedule.every().day.at('23:59').do(flush_redis)
 # 测试代码，每分钟推送数据，非测试目的不要取消注释下一行
 # schedule.every(1).minutes.do(schedule_task)
 
-# 开启分析线程，当队列中由任务时，会取出任务分析生成数据
+# 开启分析线程，当队列中有任务时，会取出任务分析生成数据
 threading.Thread(target=do_task).start()
 
 threading.Thread(target=check_schedule).start()
