@@ -3,7 +3,7 @@ import time
 import connector
 import telegram
 from telegram.ext import CommandHandler, MessageHandler, Filters
-from config import TOKEN, LIMIT_COUNT, EXCLUSIVE_MODE, RANK_COMMAND_MODE
+from config import TOKEN, LIMIT_COUNT, EXCLUSIVE_MODE, RANK_COMMAND_MODE, GROUP_LIST
 import schedule
 from task import add_task
 
@@ -91,8 +91,8 @@ def chat_content_exec(update, context):
         if len(text) > 80:
             return
         # 独享模式（仅授权群组可用）
-        if EXCLUSIVE_MODE == 1 and chat_id not in ["1231242141"]:
-            print(chat_id + " 为未认证群组，取消入库")
+        if EXCLUSIVE_MODE == 1 and str(chat_id) not in GROUP_LIST:
+            print(str(GROUP_LIST) + " 为未认证群组，取消入库")
             return
         try:
             username = update.effective_user.username

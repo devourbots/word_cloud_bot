@@ -1,6 +1,6 @@
 ## 当前版本
 
-v2.4
+v2.5
 
 ## 更新维护日志
 
@@ -95,20 +95,16 @@ docker run -d --net=host world_cloud_bot:latest
 
 ![DGbSy.png](https://s3.jpg.cm/2021/05/09/DGbSy.png)
 
-编辑 `/root/word_cloud_bot/func.py`，在 94 行左右，将自己的 群组ID 加入到列表中。
-这里的`EXCLUSIVE_MODE = 1`不要改动，注意区分！
-
+编辑 `/root/word_cloud_bot/config.py`将自己的 群组ID 加入到列表中。
 
 例如我两个的群组ID分别为：-127892174935、-471892571924
 
 那么修改后为：
 ```angular2html
-if EXCLUSIVE_MODE == 1 and chat_id not in ["-127892174935", "-471892571924"]:
-    print(chat_id + " 为未认证群组，取消入库")
-    return
+GROUP_LIST = ["-127892174935", "-471892571924"]
 ```
 
-![DGHR5.png](https://s3.jpg.cm/2021/05/09/DGHR5.png)
+![DGHR5.png](https://s3.jpg.cm/2021/07/30/I85Ygt.png)
 
 ### 设置 /rank 指令对普通用户开放
 
@@ -121,6 +117,6 @@ if EXCLUSIVE_MODE == 1 and chat_id not in ["-127892174935", "-471892571924"]:
 
 ![xW3jh.png](https://s3.jpg.cm/2021/05/05/xW3jh.png)
 
-默认分别会在当地时间 11:00、18:00、23:30 推送三次数据统计报告，并会在 23:59 清空当日统计数据，
+默认分别会在当地时间 12:00、18:00、22:00 推送三次数据统计报告，并会在次日 04:00 清空前日统计数据，
 如需更密集的数据推送，可以编辑 /root/word_cloud_bot/main.py ，按照示例格式自行增加，相关的 docker 技术操作不再赘述
 
